@@ -17,5 +17,6 @@ require('./data/reddit-db');
 
 
 
+module.exports = app;
 
 app.listen(3000);
