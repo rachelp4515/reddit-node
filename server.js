@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 require('./controllers/posts')(app);
+require('./controllers/comments.js')(app);
 
 // Set db
 require('./data/reddit-db');

@@ -27,18 +27,21 @@ module.exports = (app) => {
 
 
     app.get('/posts/:id', (req, res) => {
-        Post.findById(req.params.id).lean()
+        Post.findById(req.params.id).lean().populate('comments')
             .then((post) => res.render('posts-show', { post }))
-            .catch((err) => { console.log(err.message) });
+            .catch((err) => {
+                console.log(err.message);
+            });
     });
+
 
     app.get('/n/:subreddit', (req, res) => {
         Post.find({ subreddit: req.params.subreddit }).lean()
-          .then((posts) => res.render('posts-index', { posts }))
-          .catch((err) => {
-            console.log(err);
-          });
-      });
+            .then((posts) => res.render('posts-index', { posts }))
+            .catch((err) => {
+                console.log(err);
+            });
+    });
 
 
 
