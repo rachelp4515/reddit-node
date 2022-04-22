@@ -21,17 +21,20 @@ module.exports = (app) => {
 
   app.post("/posts/new", (req, res) => {
     // INSTANTIATE INSTANCE OF POST MODEL
-    console.log(req.user)
+    console.log(req.user);
     if (req.user) {
       const userId = req.user._id;
       const post = new Post(req.body);
-      post.author = userId;
+      post.author = req.user._id;
+      post.upVotes = [];
+      post.downVotes = [];
+      post.voteScore = 0;
 
       post
         .save()
         .then(() => User.findById(userId))
         .then((user) => {
-            console.log(post, "hERE")
+          console.log(post, "hERE");
           user.posts.unshift(post);
           user.save();
           // REDIRECT TO THE NEW POST
@@ -65,5 +68,29 @@ module.exports = (app) => {
       .catch((err) => {
         console.log(err);
       });
+  });
+
+  app.put('/posts/:id/vote-up', (req, res) => {
+    Post.findById(req.params.id).then(post => {
+      post.upVotes.push(req.user._id);
+      post.voteScore += 1;
+      post.save();
+  
+      return res.status(200);
+    }).catch(err => {
+      console.log(err);
+    })
+  });
+  
+  app.put('/posts/:id/vote-down', (req, res) => {
+    Post.findById(req.params.id).then(post => {
+      post.downVotes.push(req.user._id);
+      post.voteScore -= 1;
+      post.save();
+  
+      return res.status(200);
+    }).catch(err => {
+      console.log(err);
+    });
   });
 };

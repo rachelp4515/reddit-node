@@ -14,6 +14,7 @@ app.set('views', './views');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static('public'));
 
 const checkAuth = require('./middleware/checkAuth');
 app.use(checkAuth);
