@@ -3,12 +3,17 @@ const Post = require('../models/post');
 module.exports = (app) => {
 
     app.get('/', (req, res) => {
-        Post.find({}).lean()
-            .then((posts) => res.render('posts-index', { posts }))
-            .catch((err) => {
-                console.log(err.message);
+        const currentUser = req.user;
+      
+        Post.find({})
+          .then((posts) => {
+              console.log(posts)
+               res.render('posts-index', { posts, currentUser })
             })
-    });
+          .catch((err) => {
+            console.log(err.message);
+          });
+      });
 
 
     app.get('/posts/new', (req, res) => {
@@ -27,21 +32,23 @@ module.exports = (app) => {
 
 
     app.get('/posts/:id', (req, res) => {
-        Post.findById(req.params.id).lean().populate('comments')
-            .then((post) => res.render('posts-show', { post }))
-            .catch((err) => {
-                console.log(err.message);
-            });
-    });
-
-
-    app.get('/n/:subreddit', (req, res) => {
+        const currentUser = req.user;
+        Post.findById(req.params.id).populate('comments').lean()
+          .then((post) => res.render('posts-show', { post, currentUser }))
+          .catch((err) => {
+            console.log(err.message);
+          });
+      });
+      
+      // SUBREDDIT
+      app.get('/n/:subreddit', (req, res) => {
+        const { user } = req;
         Post.find({ subreddit: req.params.subreddit }).lean()
-            .then((posts) => res.render('posts-index', { posts }))
-            .catch((err) => {
-                console.log(err);
-            });
-    });
+          .then((posts) => res.render('posts-index', { posts, user }))
+          .catch((err) => {
+            console.log(err);
+          });
+      });
 
 
 
