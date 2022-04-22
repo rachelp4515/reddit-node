@@ -21,6 +21,7 @@ app.use(checkAuth);
 require('./controllers/posts')(app);
 require('./controllers/comments.js')(app);
 require('./controllers/auth.js')(app);
+require('./controllers/replies.js')(app);
 
 // Set db
 require('./data/reddit-db');

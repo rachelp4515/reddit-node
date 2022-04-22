@@ -11,9 +11,7 @@
     <div>
       <h3>Comments</h3>
       {{#each post.comments}}
-        <p>
-          {{this.content}}
-        </p>
+      {{> comment comment=this postId=../post._id}}
       {{/each}}
     </div>
   </div>
